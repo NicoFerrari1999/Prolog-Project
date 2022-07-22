@@ -84,8 +84,6 @@ insert([_|T], ColIndex, Counter, X, NewList, Newboard) :-
     Counter is ColIndex,
     append(NewList, [X|T], Newboard), !.
 
-head([H|_], H).
-
 display([AA,AB,AC,AD,AE,AF,AG,AH,AI,AJ,AK,AL,AM,AN,AO,AP,AQ,AR,AS,AT,AU,AV,AW,AX,AY,AZ,BA,BB,BC,BD]) :- write([AA,AB,AC,AD,AE,AF]),nl,write([AG,AH,AI,AJ,AK,AL]),
     nl,write([AM,AN,AO,AP,AQ,AR]),nl,write([AS,AT,AU,AV,AW,AX]),nl,write([AY,AZ,BA,BB,BC,BD]),nl,nl.
 
