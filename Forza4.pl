@@ -45,12 +45,13 @@ diagwin(Board, Player) :- Board = [_, Player, _, _, _, _, _, _, Player, _, _, _,
 diagwin(Board, Player) :- Board = [_, _, _, _, _, _, _, _, Player, _, _, _, _, _, _, Player, _, _, _, _, _, _, Player, _, _, _, _, _, _, Player].
 diagwin(Board, Player) :- Board = [_, _, Player, _, _, _, _, _, _, Player, _, _, _, _, _, _, Player, _, _, _, _, _, _, Player, _, _, _, _, _, _].
 
+head([H|_], H).
 
 decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :-
     Counter < (ColIndex-1),
-    Counter1 is Counter + 1,
+    NewCounter is Counter + 1,
     append(QueueList, [H], NewList1), !,
-    decreaseCounter(Board, T, ColIndex, Counter1, Simbolo, NewList1, NewList, NewBoardInsert), !. 
+    decreaseCounter(Board, T, ColIndex, NewCounter, Simbolo, NewList1, NewList, NewBoardInsert), !. 
 
 decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :-
     (H is 0 -> ((ColIndex < 6) -> write('Mossa illegale sulla colonna '),
@@ -58,11 +59,13 @@ decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, Ne
     NewColIndex is ColIndex + 1,
 	decreaseCounter(Board, [H|T], NewColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert))).
 
-%decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :-
-%    (H is 0 -> ((ColIndex >= 6) -> write('Mossa illegale sulla colonna '),
-%    write(ColIndex), nl,
-%    NewColIndex is 1,
-%	decreaseCounter(Board, [H|T], NewColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert))).
+decreaseCounter(Board, [H|_], ColIndex, _, Simbolo, QueueList, NewList, NewBoardInsert) :-
+    (H is 0 -> ((ColIndex >= 6) -> write('Mossa illegale sulla colonna '),
+    write(ColIndex), nl,
+    NewColIndex is 1,
+    NewCounter is 0,
+    append(QueueList, [H], NewQueueList),
+	decreaseCounter(Board, NewQueueList, NewColIndex, NewCounter, Simbolo, NewQueueList, NewList, NewBoardInsert))).
 
 decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :-
     Counter is (ColIndex-1),
