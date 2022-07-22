@@ -1,6 +1,6 @@
 /*
-*   Gioco Forza 4
-*/
+ *    Gioco Forza 4
+ */
 
 win(Board, Player) :- rowwin(Board, Player).
 win(Board, Player) :- colwin(Board, Player).
@@ -99,38 +99,54 @@ respond(Board, _, _, _) :- win(Board, o), write('Congratulazioni PC, hai vinto!'
     write('Vuoi giocare ancora? (1 = Si | 2 = No)'), nl,
 	read(Risp),
     (validResp(Risp) -> (posResp(Risp) ->  (nl, play) ; 
-    (nl, write('Arrivederci e grazie per aver giocato!'))) ;
-    write('Input non valido, Arrivederci e grazie per aver giocato!')).
+    (nl, write('Arrivederci e grazie per aver giocato! Verrai ora reindirizzato al menù iniziale'), nl,
+    writeln("*********************************************************************************************************"), nl, runChatbotMain)) ;
+    write('Input non valido, Arrivederci e grazie per aver giocato! Verrai ora reindirizzato al menù iniziale'), nl,
+    writeln("*********************************************************************************************************"), nl, runChatbotMain).
 
 respond(Board, _, _, _) :- win(Board, x), write('Congratulazioni giocatore, hai vinto!'), nl, 
     write('Vuoi giocare ancora? (1 = Si | 2 = No)'), nl,
 	read(Risp),
     (validResp(Risp) -> (posResp(Risp) ->  (nl, play) ; 
-    (nl, write('Arrivederci e grazie per aver giocato!'))) ;
-    write('Input non valido, Arrivederci e grazie per aver giocato!')).
+    (nl, write('Arrivederci e grazie per aver giocato! Verrai ora reindirizzato al menù iniziale'), nl,
+    writeln("*********************************************************************************************************"), nl, runChatbotMain)) ;
+    write('Input non valido, Arrivederci e grazie per aver giocato!Verrai ora reindirizzato al menù iniziale'), nl,
+    writeln("*********************************************************************************************************"), nl, runChatbotMain).
 
-respond(Board, _, _, _) :- not(member(b, Board)), !, write('Pareggio!'), nl.
 respond(Board, Newboard, NewList, NewList1) :- random(1,7, Col_Index),
 	move(Board, NewList, Col_Index, 0, o, _, NewList1, Newboard).
+
+cut(Board) :- not(member('b', Board)).
+    
+
 
 explain :-
     write('Giochi come X, scegli una colonna da 1 a 6'),
     nl,
     display([b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b]).
 
-playfrom(Board, L) :- 
-    read(N),
-    move(Board, L, N, 0, x, _, NewList, Newboard),
-    display(Newboard),
-    respond(Newboard, NewNewboard, NewList, NewList1),
-    display(NewNewboard),
-    playfrom(NewNewboard, NewList1).
+playfrom(Board, L) :-
+    (not(cut(Board)) -> (
+    	read(N),
+    	move(Board, L, N, 0, x, _, NewList, Newboard),
+    	display(Newboard),
+    	respond(Newboard, NewNewboard, NewList, NewList1),
+    	display(NewNewboard),
+    	playfrom(NewNewboard, NewList1)) ;
+    (write('Pareggio!'), nl,
+    write('Vuoi giocare ancora? (1 = Si | 2 = No)'), nl,
+	read(Risp),
+    (validResp(Risp) -> (posResp(Risp) ->  (nl, play) ; 
+    (nl, write('Arrivederci e grazie per aver giocato! Verrai ora reindirizzato al menù iniziale'), nl,
+    writeln("*********************************************************************************************************"), nl, runChatbotMain)) ;
+    write('Input non valido, Arrivederci e grazie per aver giocato!Verrai ora reindirizzato al menù iniziale'), nl,
+    writeln("*********************************************************************************************************"), nl, runChatbotMain))).
 
 play :- explain, L = [30,30,30,30,30,30], playfrom([b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b], L).
 
 /*
-*   Chatbot emergenza COVID-19
-*/
+ *    Chatbot emergenza COVID-19
+ */
 
 symptom('febbre').
 symptom('tosse').
@@ -198,7 +214,8 @@ display_menu :-
                         5 : (
                             nl,
                             writeln("Grazie per avermi usato e ricorda: pratica il distanziamento sociale e indossa la mascherina!"), nl,
-                            writeln("*********************************************************************************************************")
+                            writeln("*********************************************************************************************************"),
+                            runChatbotMain
                         )
                     ])
                 )
@@ -372,10 +389,40 @@ covid_vaccine_info :-
     writeln("Per qualunque informazione riguardo la prenotazione dei vaccini visita il seguente link: https://prenotazionevaccinicovid.regione.lombardia.it"), nl,
     writeln("*********************************************************************************************************"), nl.
 
-run_bot :-
+run_covid_vaccine_chatbot :-
     nl,
     writeln("****************************************************************************************"),
     writeln("******* Benvenuti nella chatbot per la gestione crisi da COVID-19 *******"),
     writeln("****************************************************************************************"),
     nl,
     display_menu.
+
+/*
+ *    Main per l'esecuzione della chatbot
+*/
+
+validMenuChoice(1).
+validMenuChoice(2).
+validMenuChoice(3).
+
+runChatbotMain :-
+    nl,
+    writeln("****************************************************************************************************"),
+    writeln("*************** BENVENUTI NEL MENU' GENERALE DELLA CHATBOT **************"),
+    writeln("****************************************************************************************************"), nl, nl,
+	writeln("Cosa vuoi fare?"), nl,
+    writeln("Digita un numero della lista:"), nl,
+    writeln("1. Giocare una partita a Forza 4"), nl,
+    writeln("2. Scopri se hai contratto il COVID-19"), nl,
+	writeln("3. Esci"), nl,
+	catch(
+        (read(SceltaMenu),
+            (validMenuChoice(SceltaMenu) -> (
+            	switch(SceltaMenu, [
+            		1: (play),
+                	2: (run_covid_vaccine_chatbot),
+                	3: (nl, writeln("Grazie per aver scelto la nostra chatbot, buona giornata!"))
+				])
+			) ; (nl, writeln("Non ho capito quello che hai digitato, riprova"), nl, runChatbotMain )
+        )),_,(nl, writeln("Non ho capito quello che hai digitato, riprova"), nl, runChatbotMain )
+  ).
