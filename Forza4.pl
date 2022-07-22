@@ -55,8 +55,14 @@ decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, Ne
 decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :-
     (H is 0 -> ((ColIndex < 6) -> write('Mossa illegale sulla colonna '),
     write(ColIndex), nl,
-	decreaseCounter(Board, [H|T], (ColIndex+1), Counter, Simbolo, QueueList, NewList, NewBoardInsert) ;
-    decreaseCounter(Board, [H|T], (1), Counter, Simbolo, QueueList, NewList, NewBoardInsert))).
+    NewColIndex is ColIndex + 1,
+	decreaseCounter(Board, [H|T], NewColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert))).
+
+%decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :-
+%    (H is 0 -> ((ColIndex >= 6) -> write('Mossa illegale sulla colonna '),
+%    write(ColIndex), nl,
+%    NewColIndex is 1,
+%	decreaseCounter(Board, [H|T], NewColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert))).
 
 decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :-
     Counter is (ColIndex-1),
@@ -77,8 +83,8 @@ insert([_|T], ColIndex, Counter, X, NewList, Newboard) :-
 display([AA,AB,AC,AD,AE,AF,AG,AH,AI,AJ,AK,AL,AM,AN,AO,AP,AQ,AR,AS,AT,AU,AV,AW,AX,AY,AZ,BA,BB,BC,BD]) :- write([AA,AB,AC,AD,AE,AF]),nl,write([AG,AH,AI,AJ,AK,AL]),
     nl,write([AM,AN,AO,AP,AQ,AR]),nl,write([AS,AT,AU,AV,AW,AX]),nl,write([AY,AZ,BA,BB,BC,BD]),nl,nl.
 
-respond(Board, _, _, _) :- win(Board, x), write('Congratulazioni giocatore, hai vinto!').
 respond(Board, _, _, _) :- win(Board, o), write('Congratulazioni PC, hai vinto!').
+respond(Board, _, _, _) :- win(Board, x), write('Congratulazioni giocatore, hai vinto!').
 respond(Board, Newboard, NewList, NewList1) :- random(1,7, Col_Index),
 	decreaseCounter(Board, NewList, Col_Index, 0, o, _, NewList1, Newboard).
 
