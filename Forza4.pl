@@ -45,7 +45,6 @@ diagwin(Board, Player) :- Board = [_, Player, _, _, _, _, _, _, Player, _, _, _,
 diagwin(Board, Player) :- Board = [_, _, _, _, _, _, _, _, Player, _, _, _, _, _, _, Player, _, _, _, _, _, _, Player, _, _, _, _, _, _, Player].
 diagwin(Board, Player) :- Board = [_, _, Player, _, _, _, _, _, _, Player, _, _, _, _, _, _, Player, _, _, _, _, _, _, Player, _, _, _, _, _, _].
 
-head([H|_], H).
 
 decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :-
     Counter < (ColIndex-1),
@@ -65,7 +64,7 @@ decreaseCounter(Board, [H|_], ColIndex, _, Simbolo, QueueList, NewList, NewBoard
     NewColIndex is 1,
     NewCounter is 0,
     append(QueueList, [H], NewQueueList),
-	decreaseCounter(Board, NewQueueList, NewColIndex, NewCounter, Simbolo, NewQueueList, NewList, NewBoardInsert))).
+	decreaseCounter(Board, NewQueueList, NewColIndex, NewCounter, Simbolo, _, NewList, NewBoardInsert))).
 
 decreaseCounter(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :-
     Counter is (ColIndex-1),
@@ -82,6 +81,8 @@ insert([H|T], ColIndex, Counter, X, NewList, Newboard) :-
 insert([_|T], ColIndex, Counter, X, NewList, Newboard) :- 
     Counter is ColIndex,
     append(NewList, [X|T], Newboard), !.
+
+head([H|_], H).
 
 display([AA,AB,AC,AD,AE,AF,AG,AH,AI,AJ,AK,AL,AM,AN,AO,AP,AQ,AR,AS,AT,AU,AV,AW,AX,AY,AZ,BA,BB,BC,BD]) :- write([AA,AB,AC,AD,AE,AF]),nl,write([AG,AH,AI,AJ,AK,AL]),
     nl,write([AM,AN,AO,AP,AQ,AR]),nl,write([AS,AT,AU,AV,AW,AX]),nl,write([AY,AZ,BA,BB,BC,BD]),nl,nl.
