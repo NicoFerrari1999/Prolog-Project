@@ -82,15 +82,15 @@ move(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInser
     append(QueueList, [N|T], NewList),
     insert(Board, N+(ColIndex-1), 0, Simbolo, _, NewBoardInsert), !. 
 
-insert([H|T], ColIndex, Counter, X, NewList, Newboard) :- 
+insert([H|T], ColIndex, Counter, Simbolo, NewList, Newboard) :-
     Counter < ColIndex,
     Counter1 is Counter + 1,
     append(NewList, [H], NewList1),
-    insert(T, ColIndex, Counter1, X, NewList1, Newboard), !.
+    insert(T, ColIndex, Counter1, Simbolo, NewList1, Newboard), !.
 
-insert([_|T], ColIndex, Counter, X, NewList, Newboard) :- 
+insert([_|T], ColIndex, Counter, Simbolo, NewList, Newboard) :- 
     Counter is ColIndex,
-    append(NewList, [X|T], Newboard), !.
+    append(NewList, [Simbolo|T], Newboard), !.
 
 display([AA,AB,AC,AD,AE,AF,AG,AH,AI,AJ,AK,AL,AM,AN,AO,AP,AQ,AR,AS,AT,AU,AV,AW,AX,AY,AZ,BA,BB,BC,BD]) :- write([AA,AB,AC,AD,AE,AF]), nl, write([AG,AH,AI,AJ,AK,AL]),
     nl, write([AM,AN,AO,AP,AQ,AR]), nl, write([AS,AT,AU,AV,AW,AX]), nl, write([AY,AZ,BA,BB,BC,BD]), nl, nl.
