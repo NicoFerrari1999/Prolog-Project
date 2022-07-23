@@ -64,7 +64,7 @@ move(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInser
     append(QueueList, [H], NewList1), !,
     move(Board, T, ColIndex, NewCounter, Simbolo, NewList1, NewList, NewBoardInsert), !. 
 
-move(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :-
+move(Board, [H|T], ColIndex, Counter, Simbolo, QueueList, NewList, NewBoardInsert) :- 
     (H is 0 -> ((ColIndex < 6) -> write('Giocatore '), write(Simbolo), write(' hai fatto una mossa illegale sulla colonna '),
     write(ColIndex), write(', la tua mossa verrà spostata nella colonna alla tua destra'), nl,
     NewColIndex is ColIndex + 1,
@@ -92,8 +92,8 @@ insert([_|T], ColIndex, Counter, X, NewList, Newboard) :-
     Counter is ColIndex,
     append(NewList, [X|T], Newboard), !.
 
-display([AA,AB,AC,AD,AE,AF,AG,AH,AI,AJ,AK,AL,AM,AN,AO,AP,AQ,AR,AS,AT,AU,AV,AW,AX,AY,AZ,BA,BB,BC,BD]) :- write([AA,AB,AC,AD,AE,AF]),nl,write([AG,AH,AI,AJ,AK,AL]),
-    nl,write([AM,AN,AO,AP,AQ,AR]),nl,write([AS,AT,AU,AV,AW,AX]),nl,write([AY,AZ,BA,BB,BC,BD]),nl,nl.
+display([AA,AB,AC,AD,AE,AF,AG,AH,AI,AJ,AK,AL,AM,AN,AO,AP,AQ,AR,AS,AT,AU,AV,AW,AX,AY,AZ,BA,BB,BC,BD]) :- write([AA,AB,AC,AD,AE,AF]), nl, write([AG,AH,AI,AJ,AK,AL]),
+    nl, write([AM,AN,AO,AP,AQ,AR]), nl, write([AS,AT,AU,AV,AW,AX]), nl, write([AY,AZ,BA,BB,BC,BD]), nl, nl.
 
 respond(Board, _, _, _) :- win(Board, o), write('Congratulazioni PC, hai vinto!'), nl, 
     write('Vuoi giocare ancora? (1 = Si | 2 = No)'), nl,
@@ -115,20 +115,16 @@ respond(Board, _, _, _) :- win(Board, x), write('Congratulazioni giocatore, hai 
 
 respond(Board, Newboard, NewList, NewList1) :- random(1,7, Col_Index),
 	move(Board, NewList, Col_Index, 0, o, _, NewList1, Newboard).
-
-cut(Board) :- not(member('b', Board)).
-    
-
-
+ 
 explain :-
     write('Giochi come X, scegli una colonna da 1 a 6'),
     nl,
     display([b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b]).
 
-playfrom(Board, L) :-
-    (not(cut(Board)) -> (
+playfrom(Board, Counter) :-
+    (member('b', Board)) -> (
     	read(N),
-    	move(Board, L, N, 0, x, _, NewList, Newboard),
+    	move(Board, Counter, N, 0, x, _, NewList, Newboard),
     	display(Newboard),
     	respond(Newboard, NewNewboard, NewList, NewList1),
     	display(NewNewboard),
@@ -140,9 +136,9 @@ playfrom(Board, L) :-
     (nl, write('Arrivederci e grazie per aver giocato! Verrai ora reindirizzato al menù iniziale'), nl,
     writeln("*********************************************************************************************************"), nl, runChatbotMain)) ;
     write('Input non valido, Arrivederci e grazie per aver giocato!Verrai ora reindirizzato al menù iniziale'), nl,
-    writeln("*********************************************************************************************************"), nl, runChatbotMain))).
+    writeln("*********************************************************************************************************"), nl, runChatbotMain)).
 
-play :- explain, L = [30,30,30,30,30,30], playfrom([b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b], L).
+play :- explain, Counter = [30,30,30,30,30,30], playfrom([b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b], Counter).
 
 /*
  *    Chatbot emergenza COVID-19
